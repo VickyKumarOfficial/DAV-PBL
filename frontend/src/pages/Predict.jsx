@@ -7,28 +7,36 @@ import { Label } from '../components/ui/Label';
 import { AlertCircle, CheckCircle, Loader } from 'lucide-react';
 import api from '../services/api';
 
+// Essential fields based on ML feature importance (top 10 features)
 const FORM_FIELDS = [
-  { name: 'Age', type: 'number', min: 18, max: 80, required: true },
+  { 
+    name: 'Age', 
+    type: 'number', 
+    min: 18, 
+    max: 80, 
+    required: true,
+    description: 'Your current age'
+  },
   {
     name: 'Gender',
     type: 'select',
-    options: ['Male', 'Female', 'Other', 'Non-binary', 'Transgender'],
+    options: ['Male', 'Female', 'Other'],
     required: true,
+    description: 'Gender identity'
   },
-  { name: 'Country', type: 'text', required: true },
-  {
-    name: 'self_employed',
-    label: 'Self Employed',
-    type: 'select',
-    options: ['Yes', 'No'],
+  { 
+    name: 'Country', 
+    type: 'text', 
     required: true,
+    description: 'Country where you work'
   },
   {
     name: 'family_history',
-    label: 'Family History of Mental Health',
+    label: 'Family History',
     type: 'select',
     options: ['Yes', 'No'],
     required: true,
+    description: 'Do you have a family history of mental illness?'
   },
   {
     name: 'work_interfere',
@@ -36,27 +44,7 @@ const FORM_FIELDS = [
     type: 'select',
     options: ['Never', 'Rarely', 'Sometimes', 'Often'],
     required: true,
-  },
-  {
-    name: 'no_employees',
-    label: 'Number of Employees',
-    type: 'select',
-    options: ['1-5', '6-25', '26-100', '100-500', '500-1000', 'More than 1000'],
-    required: true,
-  },
-  {
-    name: 'remote_work',
-    label: 'Remote Work',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
-  },
-  {
-    name: 'tech_company',
-    label: 'Tech Company',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
+    description: 'How often does mental health affect your work performance?'
   },
   {
     name: 'benefits',
@@ -64,6 +52,7 @@ const FORM_FIELDS = [
     type: 'select',
     options: ['Yes', 'No', "Don't know"],
     required: true,
+    description: 'Does your employer provide mental health benefits?'
   },
   {
     name: 'care_options',
@@ -71,83 +60,15 @@ const FORM_FIELDS = [
     type: 'select',
     options: ['Yes', 'No', "Don't know"],
     required: true,
+    description: 'Are you aware of care options for mental health at work?'
   },
   {
-    name: 'wellness_program',
-    label: 'Wellness Program',
-    type: 'select',
-    options: ['Yes', 'No', "Don't know"],
-    required: true,
-  },
-  {
-    name: 'seek_help',
-    label: 'Seek Help Resources',
+    name: 'self_employed',
+    label: 'Self Employed',
     type: 'select',
     options: ['Yes', 'No'],
     required: true,
-  },
-  {
-    name: 'anonymity',
-    label: 'Anonymity',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
-  },
-  {
-    name: 'leave',
-    label: 'Ease of Taking Leave',
-    type: 'select',
-    options: ['Very easy', 'Somewhat easy', "Don't know", 'Somewhat difficult', 'Very difficult'],
-    required: true,
-  },
-  {
-    name: 'mental_health_consequence',
-    label: 'Mental Health Consequence',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
-  },
-  {
-    name: 'phys_health_consequence',
-    label: 'Physical Health Consequence',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
-  },
-  {
-    name: 'coworkers',
-    label: 'Discuss with Coworkers',
-    type: 'select',
-    options: ['Yes', 'Some of them', 'No'],
-    required: true,
-  },
-  {
-    name: 'supervisor',
-    label: 'Discuss with Supervisor',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
-  },
-  {
-    name: 'mental_health_interview',
-    label: 'Mental Health in Interview',
-    type: 'select',
-    options: ['Yes', 'No', 'Maybe'],
-    required: true,
-  },
-  {
-    name: 'phys_health_interview',
-    label: 'Physical Health in Interview',
-    type: 'select',
-    options: ['Yes', 'No', 'Maybe'],
-    required: true,
-  },
-  {
-    name: 'mental_vs_physical',
-    label: 'Mental vs Physical Health',
-    type: 'select',
-    options: ['Yes', 'No'],
-    required: true,
+    description: 'Are you self-employed?'
   },
   {
     name: 'obs_consequence',
@@ -155,6 +76,15 @@ const FORM_FIELDS = [
     type: 'select',
     options: ['Yes', 'No'],
     required: true,
+    description: 'Have you observed negative consequences for discussing mental health at work?'
+  },
+  {
+    name: 'leave',
+    label: 'Mental Health Leave',
+    type: 'select',
+    options: ['Very easy', 'Somewhat easy', "Don't know", 'Somewhat difficult', 'Very difficult'],
+    required: true,
+    description: 'How easy is it to take medical leave for mental health?'
   },
 ];
 
@@ -198,9 +128,9 @@ export const Predict = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold mb-2">Mental Health Treatment Predictor</h1>
+        <h1 className="text-4xl font-bold mb-2">Mental Health Support Assessment</h1>
         <p className="text-muted-foreground">
-          Fill in the form below to predict the likelihood of seeking mental health treatment.
+          Answer 10 questions to understand your mental health support needs. Takes less than 2 minutes.
         </p>
       </div>
 
@@ -209,9 +139,9 @@ export const Predict = () => {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Your Information</CardTitle>
+              <CardTitle>Quick Assessment Form</CardTitle>
               <CardDescription>
-                Please provide accurate information for better predictions
+                All responses are confidential. Answer honestly for the most accurate insights.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -297,89 +227,173 @@ export const Predict = () => {
         {/* Result Section */}
         <div>
           {result && (
-            <Card className="sticky top-20 bg-gradient-to-br from-blue-50 dark:from-blue-900/20 to-purple-50 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  Prediction Result
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Main Prediction */}
-                <div className="text-center">
-                  <div className={`text-4xl font-bold mb-2 ${
-                    result.prediction === 'Yes'
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-purple-600 dark:text-purple-400'
-                  }`}>
-                    {result.prediction}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Likely to seek mental health treatment
-                  </p>
-                </div>
-
-                {/* Probability Gauge */}
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span>No Treatment</span>
-                    <span className="font-semibold">{(result.probability.No * 100).toFixed(1)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-red-500 h-2 rounded-full transition-all"
-                      style={{ width: `${result.probability.No * 100}%` }}
-                    ></div>
+            <div className="space-y-4">
+              {/* Main Result Card */}
+              <Card className="sticky top-20 bg-gradient-to-br from-blue-50 dark:from-blue-900/20 to-purple-50 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    Assessment Result
+                  </CardTitle>
+                  <CardDescription>
+                    Based on your responses, here's your mental health support assessment
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Risk Level */}
+                  <div className="text-center p-4 bg-white dark:bg-slate-800 rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-2">Support Likelihood</p>
+                    <div className={`text-3xl font-bold mb-1 ${
+                      result.probability.Yes >= 0.7
+                        ? 'text-red-600 dark:text-red-400'
+                        : result.probability.Yes >= 0.5
+                        ? 'text-yellow-600 dark:text-yellow-400'
+                        : 'text-green-600 dark:text-green-400'
+                    }`}>
+                      {result.probability.Yes >= 0.7 ? 'High' : result.probability.Yes >= 0.5 ? 'Medium' : 'Low'}
+                    </div>
+                    <p className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                      {(result.probability.Yes * 100).toFixed(0)}% likelihood
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      of benefiting from mental health support
+                    </p>
                   </div>
 
-                  <div className="flex justify-between text-sm mt-4">
-                    <span>Yes Treatment</span>
-                    <span className="font-semibold">{(result.probability.Yes * 100).toFixed(1)}%</span>
+                  {/* Progress Bar */}
+                  <div>
+                    <div className="flex justify-between text-xs text-muted-foreground mb-2">
+                      <span>Low Risk</span>
+                      <span>High Risk</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all ${
+                          result.probability.Yes >= 0.7
+                            ? 'bg-gradient-to-r from-yellow-500 to-red-500'
+                            : result.probability.Yes >= 0.5
+                            ? 'bg-gradient-to-r from-green-500 to-yellow-500'
+                            : 'bg-green-500'
+                        }`}
+                        style={{ width: `${result.probability.Yes * 100}%` }}
+                      ></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full transition-all"
-                      style={{ width: `${result.probability.Yes * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
 
-                {/* Confidence */}
-                <div className="bg-white dark:bg-slate-800 p-3 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">Confidence Level</p>
-                  <div className={`text-lg font-bold ${
-                    result.confidence === 'High'
-                      ? 'text-green-600 dark:text-green-400'
-                      : result.confidence === 'Medium'
-                      ? 'text-yellow-600 dark:text-yellow-400'
-                      : 'text-orange-600 dark:text-orange-400'
-                  }`}>
-                    {result.confidence}
+                  {/* Top Risk Factors */}
+                  <div className="bg-white dark:bg-slate-800 p-4 rounded-lg">
+                    <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4" />
+                      Key Factors Identified
+                    </h4>
+                    <div className="space-y-2">
+                      {result.top_factors?.slice(0, 3).map((factor, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-sm">
+                          <span className="text-blue-600 dark:text-blue-400 font-bold">•</span>
+                          <span className="text-muted-foreground">
+                            {factor.feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Top Factors */}
-                <div>
-                  <h4 className="font-semibold text-sm mb-3">Top Contributing Factors</h4>
-                  <div className="space-y-2">
-                    {result.top_factors?.slice(0, 5).map((factor, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground truncate">
-                          {factor.feature.replace(/_/g, ' ')}
-                        </span>
-                        <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                          factor.direction === 'positive'
-                            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100'
-                            : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100'
-                        }`}>
-                          {factor.direction}
-                        </span>
+                  {/* Confidence */}
+                  <div className="text-center text-xs text-muted-foreground">
+                    Model Confidence: <span className="font-semibold">{result.confidence}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recommendations Card */}
+              <Card className="bg-gradient-to-br from-green-50 dark:from-green-900/20 to-teal-50 dark:to-teal-900/20 border-green-200 dark:border-green-800">
+                <CardHeader>
+                  <CardTitle className="text-lg">💡 Personalized Recommendations</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</div>
+                      <div>
+                        <p className="font-medium text-sm">Talk to Your Employer</p>
+                        <p className="text-xs text-muted-foreground">Ask HR about Employee Assistance Programs (EAP) and mental health benefits available to you.</p>
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</div>
+                      <div>
+                        <p className="font-medium text-sm">Consult a Professional</p>
+                        <p className="text-xs text-muted-foreground">Consider speaking with a therapist or counselor who can provide personalized guidance.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</div>
+                      <div>
+                        <p className="font-medium text-sm">Build a Support Network</p>
+                        <p className="text-xs text-muted-foreground">Connect with support groups, trusted colleagues, or friends who understand mental health challenges.</p>
+                      </div>
+                    </div>
+                    {result.probability.Yes >= 0.7 && (
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</div>
+                        <div>
+                          <p className="font-medium text-sm text-red-600 dark:text-red-400">Consider Immediate Support</p>
+                          <p className="text-xs text-muted-foreground">If you're experiencing crisis, reach out to emergency resources listed below.</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+
+              {/* Resources Card */}
+              <Card className="bg-gradient-to-br from-purple-50 dark:from-purple-900/20 to-pink-50 dark:to-pink-900/20 border-purple-200 dark:border-purple-800">
+                <CardHeader>
+                  <CardTitle className="text-lg">📞 Mental Health Resources</CardTitle>
+                  <CardDescription className="text-xs">
+                    Professional help is available 24/7
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid gap-3">
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-lg">
+                      <p className="font-semibold text-sm mb-1">🆘 Crisis Support</p>
+                      <p className="text-xs text-muted-foreground">National Suicide Prevention Lifeline</p>
+                      <a href="tel:988" className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">988</a>
+                      <p className="text-xs text-muted-foreground mt-1">Available 24/7 for anyone in crisis</p>
+                    </div>
+                    
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-lg">
+                      <p className="font-semibold text-sm mb-1">💬 Crisis Text Line</p>
+                      <p className="text-xs text-muted-foreground">Text HOME to</p>
+                      <a href="sms:741741" className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">741741</a>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-lg">
+                      <p className="font-semibold text-sm mb-1">🌐 Online Therapy</p>
+                      <div className="space-y-1">
+                        <a href="https://www.betterhelp.com" target="_blank" rel="noopener noreferrer" className="block text-xs text-blue-600 dark:text-blue-400 hover:underline">BetterHelp →</a>
+                        <a href="https://www.talkspace.com" target="_blank" rel="noopener noreferrer" className="block text-xs text-blue-600 dark:text-blue-400 hover:underline">Talkspace →</a>
+                      </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-800 p-3 rounded-lg">
+                      <p className="font-semibold text-sm mb-1">📚 Resources</p>
+                      <div className="space-y-1">
+                        <a href="https://www.nami.org" target="_blank" rel="noopener noreferrer" className="block text-xs text-blue-600 dark:text-blue-400 hover:underline">NAMI (Support & Education) →</a>
+                        <a href="https://www.mentalhealth.gov" target="_blank" rel="noopener noreferrer" className="block text-xs text-blue-600 dark:text-blue-400 hover:underline">MentalHealth.gov →</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-3 rounded-lg mt-4">
+                    <p className="text-xs text-yellow-900 dark:text-yellow-100">
+                      <strong>Disclaimer:</strong> This assessment is for informational purposes only and is not a medical diagnosis. Please consult with a qualified mental health professional for proper evaluation and treatment.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
       </div>

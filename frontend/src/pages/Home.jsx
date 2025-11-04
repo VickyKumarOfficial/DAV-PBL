@@ -39,11 +39,11 @@ export const Home = () => {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-900 via-purple-900 to-pink-900 dark:from-blue-50 dark:via-purple-50 dark:to-pink-50 bg-clip-text text-transparent">
-            Predict Mental Health Treatment Needs
+            Mental Health Support Assessment
           </h1>
 
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
-            Harness the power of machine learning to predict the likelihood of mental health treatment based on workplace and demographic factors. Get actionable insights to support employee wellbeing.
+            Quick 2-minute assessment to understand your mental health support needs. Get personalized recommendations and access to professional resources.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
@@ -87,9 +87,9 @@ export const Home = () => {
               <div className="p-3 w-fit bg-blue-100 dark:bg-blue-900 rounded-lg mb-4">
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-300" />
               </div>
-              <CardTitle>Fast & Accurate</CardTitle>
+              <CardTitle>Quick & Easy</CardTitle>
               <CardDescription>
-                AI-powered predictions with 79% ROC-AUC accuracy
+                Just 10 questions • 2 minutes to complete • Instant results
               </CardDescription>
             </CardHeader>
           </Card>
@@ -100,9 +100,9 @@ export const Home = () => {
               <div className="p-3 w-fit bg-purple-100 dark:bg-purple-900 rounded-lg mb-4">
                 <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-300" />
               </div>
-              <CardTitle>Data-Driven Insights</CardTitle>
+              <CardTitle>Personalized Recommendations</CardTitle>
               <CardDescription>
-                Analyze 1,259 mental health survey responses
+                Get tailored advice and mental health resources based on your responses
               </CardDescription>
             </CardHeader>
           </Card>
@@ -113,9 +113,9 @@ export const Home = () => {
               <div className="p-3 w-fit bg-pink-100 dark:bg-pink-900 rounded-lg mb-4">
                 <Users className="w-6 h-6 text-pink-600 dark:text-pink-300" />
               </div>
-              <CardTitle>Explainable AI</CardTitle>
+              <CardTitle>Evidence-Based</CardTitle>
               <CardDescription>
-                Understand which factors influence predictions
+                AI model trained on 1,259+ mental health survey responses
               </CardDescription>
             </CardHeader>
           </Card>
@@ -154,13 +154,13 @@ export const Home = () => {
 
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 md:p-12 text-white text-center">
-        <h3 className="text-2xl font-bold mb-4">Ready to Make a Prediction?</h3>
+        <h3 className="text-2xl font-bold mb-4">Ready to Get Your Assessment?</h3>
         <p className="text-blue-100 mb-6 max-w-xl mx-auto">
-          Fill in your details and let our AI model predict your mental health treatment likelihood based on workplace factors.
+          Answer 10 simple questions and receive personalized insights about your mental health support needs. Completely confidential and takes less than 2 minutes.
         </p>
         <Link to="/predict">
           <Button size="lg" variant="secondary" className="gap-2">
-            Get Started <ArrowRight className="w-4 h-4" />
+            Start Assessment <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
       </div>
