@@ -35,9 +35,17 @@ workplace and demographic factors from the OSMI Mental Health in Tech Survey.
 """
 
 # CORS settings
+import os
+
+# Get allowed origins from environment variable or use defaults
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
+
 CORS_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
+    # Production origins - update these with your actual Render URLs
+    "https://mindcare-frontend.onrender.com",
+    *ALLOWED_ORIGINS,  # Additional origins from environment variable
 ]
