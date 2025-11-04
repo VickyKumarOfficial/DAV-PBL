@@ -41,7 +41,7 @@ Thumbs.db
 
 # Project specific
 artifacts/*.pkl
-artifacts/*.joblib
+# artifacts/*.joblib  # COMMENTED OUT - Need these for Render deployment
 data/processed_*.csv
 outputs/charts/*.png
 outputs/charts/*.html
