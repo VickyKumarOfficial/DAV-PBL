@@ -9,7 +9,7 @@ import sys
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from app.config import (MODEL_PATH, SCALER_PATH, FEATURE_NAMES_PATH,
-                        LABEL_ENCODERS_PATH, EXPLAINER_PATH)
+                        LABEL_ENCODERS_PATH, EXPLAINER_PATH, BASE_DIR, ARTIFACTS_DIR)
 from ml.explainer import ModelExplainer
 
 
@@ -32,7 +32,18 @@ class PredictionService:
     
     def _load_model(self):
         """Load model and preprocessing artifacts"""
+        import os
         print("Loading model artifacts...")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"BASE_DIR: {BASE_DIR}")
+        print(f"ARTIFACTS_DIR: {ARTIFACTS_DIR}")
+        print(f"MODEL_PATH: {MODEL_PATH}")
+        print(f"Model file exists: {MODEL_PATH.exists()}")
+        
+        if ARTIFACTS_DIR.exists():
+            print(f"Artifacts directory contents: {list(ARTIFACTS_DIR.iterdir())}")
+        else:
+            print(f"ERROR: Artifacts directory does not exist!")
         
         self._model = joblib.load(MODEL_PATH)
         self._scaler = joblib.load(SCALER_PATH)
