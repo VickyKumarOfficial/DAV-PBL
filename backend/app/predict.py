@@ -9,7 +9,7 @@ import sys
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from app.config import (MODEL_PATH, SCALER_PATH, FEATURE_NAMES_PATH,
-                        LABEL_ENCODERS_PATH, EXPLAINER_PATH, BASE_DIR, ARTIFACTS_DIR)
+                        LABEL_ENCODERS_PATH, EXPLAINER_PATH)
 from ml.explainer import ModelExplainer
 
 
@@ -32,18 +32,7 @@ class PredictionService:
     
     def _load_model(self):
         """Load model and preprocessing artifacts"""
-        import os
         print("Loading model artifacts...")
-        print(f"Current working directory: {os.getcwd()}")
-        print(f"BASE_DIR: {BASE_DIR}")
-        print(f"ARTIFACTS_DIR: {ARTIFACTS_DIR}")
-        print(f"MODEL_PATH: {MODEL_PATH}")
-        print(f"Model file exists: {MODEL_PATH.exists()}")
-        
-        if ARTIFACTS_DIR.exists():
-            print(f"Artifacts directory contents: {list(ARTIFACTS_DIR.iterdir())}")
-        else:
-            print(f"ERROR: Artifacts directory does not exist!")
         
         self._model = joblib.load(MODEL_PATH)
         self._scaler = joblib.load(SCALER_PATH)
@@ -52,6 +41,36 @@ class PredictionService:
         self._explainer_data = joblib.load(EXPLAINER_PATH)
         
         print("✓ All artifacts loaded successfully")
+    
+    def _fill_default_values(self, input_data: dict) -> dict:
+        """
+        Fill in default values for missing fields (for simplified form)
+        Uses neutral/average values for fields not collected
+        """
+        # Default values based on dataset averages and neutral responses
+        defaults = {
+            # Fields NOT in simplified form - set to neutral/average values
+            'no_employees': '26-100',  # Medium company
+            'remote_work': 'No',  # Most common
+            'tech_company': 'Yes',  # Assuming tech-focused assessment
+            'wellness_program': "Don't know",  # Neutral
+            'seek_help': 'No',  # Conservative assumption
+            'anonymity': 'No',  # Conservative assumption
+            'mental_health_consequence': 'No',  # Neutral
+            'phys_health_consequence': 'No',  # Neutral
+            'coworkers': 'Some of them',  # Middle option
+            'supervisor': 'No',  # Conservative
+            'mental_health_interview': 'Maybe',  # Neutral
+            'phys_health_interview': 'Maybe',  # Neutral
+            'mental_vs_physical': 'No',  # Neutral
+        }
+        
+        # Create complete input with defaults
+        complete_input = defaults.copy()
+        # Override with actual user input
+        complete_input.update(input_data)
+        
+        return complete_input
     
     def preprocess_input(self, input_data: dict) -> np.ndarray:
         """
@@ -63,6 +82,9 @@ class PredictionService:
         Returns:
             Preprocessed numpy array ready for prediction
         """
+        # Fill in missing fields with defaults
+        input_data = self._fill_default_values(input_data)
+        
         # Create DataFrame from input
         df = pd.DataFrame([input_data])
         
