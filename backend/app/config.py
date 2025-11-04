@@ -45,7 +45,7 @@ CORS_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
-    # Production origins - update these with your actual Render URLs
-    "https://mindcare-frontend.onrender.com",
+    # Production origins
+    "https://mindcare-n33b.onrender.com",  # Actual frontend URL
     *ALLOWED_ORIGINS,  # Additional origins from environment variable
 ]
