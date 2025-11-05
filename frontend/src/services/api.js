@@ -25,11 +25,25 @@ export const api = {
   // Make prediction
   predict: async (inputData) => {
     try {
+      console.log('Sending prediction request with data:', inputData);
       const response = await apiClient.post('/predict', inputData);
+      console.log('Prediction response:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Prediction error:', error);
-      throw error;
+      console.error('Prediction error details:', error);
+      if (error.response) {
+        // Server responded with error
+        console.error('Error response:', error.response.data);
+        throw new Error(error.response.data.detail || 'Server error');
+      } else if (error.request) {
+        // Request made but no response
+        console.error('No response received:', error.request);
+        throw new Error('Cannot connect to server. Please check if backend is running.');
+      } else {
+        // Error in request setup
+        console.error('Request setup error:', error.message);
+        throw new Error(error.message);
+      }
     }
   },
 

@@ -108,12 +108,16 @@ export const Predict = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setResult(null);
 
     try {
+      console.log('Submitting form data:', formData);
       const response = await api.predict(formData);
+      console.log('Received response:', response);
       setResult(response);
     } catch (err) {
-      setError(err.message || 'Failed to make prediction');
+      console.error('Error in handleSubmit:', err);
+      setError(err.message || 'Failed to make prediction. Please try again.');
     } finally {
       setLoading(false);
     }
