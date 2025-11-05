@@ -115,6 +115,13 @@ export const Predict = () => {
       const response = await api.predict(formData);
       console.log('Received response:', response);
       setResult(response);
+      
+      // Save user data and prediction result to localStorage for comparison graphs
+      localStorage.setItem('userAssessmentData', JSON.stringify({
+        inputs: formData,
+        prediction: response,
+        timestamp: new Date().toISOString()
+      }));
     } catch (err) {
       console.error('Error in handleSubmit:', err);
       setError(err.message || 'Failed to make prediction. Please try again.');
