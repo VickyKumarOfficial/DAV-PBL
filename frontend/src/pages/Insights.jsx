@@ -162,251 +162,182 @@ export const Insights = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Chart 1: Mental Health Support Availability */}
+            {/* Chart 1: Workplace Support Score Comparison */}
             <Card>
               <CardHeader>
-                <CardTitle>Mental Health Support Availability</CardTitle>
-                <CardDescription>Workplace support benefits comparison</CardDescription>
+                <CardTitle>Workplace Support Comparison</CardTitle>
+                <CardDescription>Your support vs dataset average vs ideal workplace</CardDescription>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={350}>
                   <BarChart
                     data={[
                       {
                         name: 'Benefits',
                         'You': userData.inputs.benefits === 'Yes' ? 100 : 0,
-                        'Dataset Avg': 50.6,
+                        'Dataset': 50.6,
                         'Ideal': 100,
                       },
                       {
                         name: 'Care Options',
                         'You': userData.inputs.care_options === 'Yes' ? 100 : 0,
-                        'Dataset Avg': 48.2,
+                        'Dataset': 48.2,
                         'Ideal': 100,
                       },
                       {
                         name: 'Easy Leave',
                         'You': ['Very easy', 'Somewhat easy'].includes(userData.inputs.leave) ? 100 : 0,
-                        'Dataset Avg': 42.5,
+                        'Dataset': 42.5,
+                        'Ideal': 100,
+                      },
+                      {
+                        name: 'Work Interfere',
+                        'You': {
+                          'Never': 100,
+                          'Rarely': 75,
+                          'Sometimes': 50,
+                          'Often': 0,
+                        }[userData.inputs.work_interfere] || 50,
+                        'Dataset': 60,
                         'Ideal': 100,
                       },
                     ]}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis label={{ value: 'Availability (%)', angle: -90, position: 'insideLeft' }} />
+                    <YAxis label={{ value: 'Score (%)', angle: -90, position: 'insideLeft' }} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="You" fill="#8b5cf6" />
-                    <Bar dataKey="Dataset Avg" fill="#94a3b8" />
-                    <Bar dataKey="Ideal" fill="#22c55e" />
+                    <Bar dataKey="You" fill="#8b5cf6" name="Your Score" />
+                    <Bar dataKey="Dataset" fill="#94a3b8" name="Dataset Avg" />
+                    <Bar dataKey="Ideal" fill="#22c55e" name="Ideal" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
 
-            {/* Chart 2: Work-Life Balance Impact */}
+            {/* Chart 2: Overall Risk Assessment */}
             <Card>
               <CardHeader>
-                <CardTitle>Work-Life Balance Impact</CardTitle>
-                <CardDescription>Mental health interference levels</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    layout="vertical"
-                    data={[
-                      {
-                        category: 'Work Interference',
-                        'You': {
-                          'Never': 0,
-                          'Rarely': 25,
-                          'Sometimes': 50,
-                          'Often': 100,
-                        }[userData.inputs.work_interfere] || 0,
-                        'Low Risk': 25,
-                      },
-                      {
-                        category: 'Observed Consequences',
-                        'You': userData.inputs.obs_consequence === 'Yes' ? 100 : 0,
-                        'Low Risk': 0,
-                      },
-                      {
-                        category: 'Leave Difficulty',
-                        'You': {
-                          'Very easy': 0,
-                          'Somewhat easy': 25,
-                          "Don't know": 50,
-                          'Somewhat difficult': 75,
-                          'Very difficult': 100,
-                        }[userData.inputs.leave] || 50,
-                        'Low Risk': 25,
-                      },
-                    ]}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" domain={[0, 100]} label={{ value: 'Impact Level (%)', position: 'insideBottom', offset: -5 }} />
-                    <YAxis type="category" dataKey="category" width={150} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="You" fill="#ef4444" />
-                    <Bar dataKey="Low Risk" fill="#22c55e" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Chart 3: Risk Factors Comparison */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Risk Factors</CardTitle>
-                <CardDescription>Key indicators affecting mental health support needs</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={[
-                        {
-                          name: 'Family History',
-                          value: userData.inputs.family_history === 'Yes' ? 35 : 0,
-                          color: '#ef4444',
-                        },
-                        {
-                          name: 'Work Interference',
-                          value: {
-                            'Never': 0,
-                            'Rarely': 15,
-                            'Sometimes': 25,
-                            'Often': 35,
-                          }[userData.inputs.work_interfere] || 0,
-                          color: '#f59e0b',
-                        },
-                        {
-                          name: 'No Support',
-                          value: userData.inputs.benefits === 'No' ? 20 : 0,
-                          color: '#3b82f6',
-                        },
-                        {
-                          name: 'Low Risk',
-                          value: 100 - 
-                            ((userData.inputs.family_history === 'Yes' ? 35 : 0) +
-                            ({
-                              'Never': 0,
-                              'Rarely': 15,
-                              'Sometimes': 25,
-                              'Often': 35,
-                            }[userData.inputs.work_interfere] || 0) +
-                            (userData.inputs.benefits === 'No' ? 20 : 0)),
-                          color: '#22c55e',
-                        },
-                      ].filter(item => item.value > 0)}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {[
-                        { name: 'Family History', color: '#ef4444' },
-                        { name: 'Work Interference', color: '#f59e0b' },
-                        { name: 'No Support', color: '#3b82f6' },
-                        { name: 'Low Risk', color: '#22c55e' },
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Chart 4: Overall Support Score */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Overall Workplace Support Score</CardTitle>
-                <CardDescription>Combined score based on benefits, awareness, and accessibility</CardDescription>
+                <CardTitle>Overall Support & Risk Score</CardTitle>
+                <CardDescription>Combined assessment based on your responses</CardDescription>
               </CardHeader>
               <CardContent>
                 {(() => {
                   // Calculate support score
-                  let score = 0;
-                  if (userData.inputs.benefits === 'Yes') score += 33;
-                  if (userData.inputs.care_options === 'Yes') score += 33;
-                  if (['Very easy', 'Somewhat easy'].includes(userData.inputs.leave)) score += 34;
+                  let supportScore = 0;
+                  if (userData.inputs.benefits === 'Yes') supportScore += 25;
+                  if (userData.inputs.care_options === 'Yes') supportScore += 25;
+                  if (['Very easy', 'Somewhat easy'].includes(userData.inputs.leave)) supportScore += 25;
+                  if (['Never', 'Rarely'].includes(userData.inputs.work_interfere)) supportScore += 25;
                   
+                  // Calculate risk factors
+                  let riskScore = 0;
+                  if (userData.inputs.family_history === 'Yes') riskScore += 30;
+                  if (['Sometimes', 'Often'].includes(userData.inputs.work_interfere)) riskScore += 35;
+                  if (userData.inputs.obs_consequence === 'Yes') riskScore += 20;
+                  if (userData.inputs.benefits === 'No') riskScore += 15;
+
                   const getScoreColor = (s) => {
-                    if (s >= 75) return '#22c55e'; // Green
-                    if (s >= 50) return '#f59e0b'; // Orange
-                    return '#ef4444'; // Red
+                    if (s >= 75) return '#22c55e';
+                    if (s >= 50) return '#f59e0b';
+                    return '#ef4444';
                   };
 
-                  const getScoreLabel = (s) => {
-                    if (s >= 75) return 'Excellent Support';
-                    if (s >= 50) return 'Moderate Support';
-                    if (s >= 25) return 'Limited Support';
-                    return 'Poor Support';
+                  const getRiskColor = (r) => {
+                    if (r <= 25) return '#22c55e';
+                    if (r <= 50) return '#f59e0b';
+                    return '#ef4444';
                   };
 
                   return (
-                    <div className="space-y-6">
-                      <div className="flex items-end gap-4">
-                        <div className="flex-1">
-                          <div className="flex justify-between mb-2">
-                            <span className="text-sm font-medium">Your Score</span>
-                            <span className="text-sm font-medium" style={{ color: getScoreColor(score) }}>
-                              {score}/100
-                            </span>
+                    <div className="space-y-8">
+                      {/* Support Score */}
+                      <div>
+                        <div className="flex justify-between mb-2">
+                          <span className="text-sm font-medium">Support Score</span>
+                          <span className="text-sm font-bold" style={{ color: getScoreColor(supportScore) }}>
+                            {supportScore}/100
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-8">
+                          <div
+                            className="h-8 rounded-full transition-all duration-500 flex items-center justify-center text-white text-sm font-bold"
+                            style={{
+                              width: `${supportScore}%`,
+                              backgroundColor: getScoreColor(supportScore),
+                            }}
+                          >
+                            {supportScore > 15 && `${supportScore}%`}
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-8">
-                            <div
-                              className="h-8 rounded-full transition-all duration-500 flex items-center justify-center text-white text-sm font-bold"
-                              style={{
-                                width: `${score}%`,
-                                backgroundColor: getScoreColor(score),
-                              }}
-                            >
-                              {score > 20 && `${score}%`}
-                            </div>
-                          </div>
-                          <p className="text-sm mt-2" style={{ color: getScoreColor(score) }}>
-                            {getScoreLabel(score)}
-                          </p>
+                        </div>
+                        <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                          <span>Low</span>
+                          <span>Moderate</span>
+                          <span>Excellent</span>
                         </div>
                       </div>
 
-                      <div className="space-y-3 pt-4 border-t">
-                        <div className="flex justify-between text-sm">
-                          <span>Mental Health Benefits</span>
-                          <span className={userData.inputs.benefits === 'Yes' ? 'text-green-600' : 'text-red-600'}>
-                            {userData.inputs.benefits}
+                      {/* Risk Score */}
+                      <div>
+                        <div className="flex justify-between mb-2">
+                          <span className="text-sm font-medium">Risk Factors</span>
+                          <span className="text-sm font-bold" style={{ color: getRiskColor(riskScore) }}>
+                            {riskScore}/100
                           </span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span>Care Options Awareness</span>
-                          <span className={userData.inputs.care_options === 'Yes' ? 'text-green-600' : 'text-red-600'}>
-                            {userData.inputs.care_options}
-                          </span>
+                        <div className="w-full bg-gray-200 rounded-full h-8">
+                          <div
+                            className="h-8 rounded-full transition-all duration-500 flex items-center justify-center text-white text-sm font-bold"
+                            style={{
+                              width: `${riskScore}%`,
+                              backgroundColor: getRiskColor(riskScore),
+                            }}
+                          >
+                            {riskScore > 15 && `${riskScore}%`}
+                          </div>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span>Leave Accessibility</span>
-                          <span className={['Very easy', 'Somewhat easy'].includes(userData.inputs.leave) ? 'text-green-600' : 'text-red-600'}>
-                            {userData.inputs.leave}
-                          </span>
+                        <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                          <span>Low Risk</span>
+                          <span>Moderate</span>
+                          <span>High Risk</span>
                         </div>
                       </div>
 
+                      {/* Comparison with Ideal */}
+                      <div className="pt-4 border-t space-y-3">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">Your Support Score</span>
+                          <span className="font-bold" style={{ color: getScoreColor(supportScore) }}>
+                            {supportScore}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">Dataset Average</span>
+                          <span className="font-bold text-gray-600">55%</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">Ideal Workplace</span>
+                          <span className="font-bold text-green-600">100%</span>
+                        </div>
+                      </div>
+
+                      {/* Key Insights */}
                       <div className="pt-4 border-t">
-                        <div className="flex items-center justify-between text-sm mb-2">
-                          <span className="font-medium">Ideal Score (Healthy Workplace)</span>
-                          <span className="text-green-600 font-bold">100/100</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-6">
-                          <div className="bg-green-500 h-6 rounded-full" style={{ width: '100%' }}></div>
+                        <p className="text-sm font-medium mb-2">Key Factors:</p>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${userData.inputs.family_history === 'Yes' ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                            <span>Family History: {userData.inputs.family_history}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${['Sometimes', 'Often'].includes(userData.inputs.work_interfere) ? 'bg-red-500' : 'bg-green-500'}`}></div>
+                            <span>Work Impact: {userData.inputs.work_interfere}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${userData.inputs.benefits === 'Yes' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span>Benefits: {userData.inputs.benefits}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -547,30 +478,150 @@ export const Insights = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
-      )}
 
-      {/* EDA Visualizations */}
-      {charts && charts.charts && charts.charts.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Exploratory Data Analysis Charts</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {charts.charts.map((chart) => (
-              <Card key={chart} className="overflow-hidden">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm">
-                    {chart.replace(/^\d+_/, '').replace(/_/g, ' ').replace('.png', '')}
-                  </CardTitle>
+          {/* Dataset Visualization Charts */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold mb-4">Dataset Insights</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Chart 1: Treatment Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Treatment Seeking Distribution</CardTitle>
+                  <CardDescription>Percentage of people seeking vs not seeking treatment</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0">
-                  <img
-                    src={api.getChartUrl(chart)}
-                    alt={chart}
-                    className="w-full h-auto object-cover"
-                  />
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={[
+                          {
+                            name: 'Seeking Treatment',
+                            value: dataset_info.treatment_yes,
+                            color: '#22c55e',
+                          },
+                          {
+                            name: 'Not Seeking Treatment',
+                            value: dataset_info.treatment_no,
+                            color: '#ef4444',
+                          },
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        <Cell fill="#22c55e" />
+                        <Cell fill="#ef4444" />
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="mt-4 text-center text-sm text-muted-foreground">
+                    <p><strong>{dataset_info.treatment_yes}</strong> out of <strong>{dataset_info.total_samples}</strong> people seek treatment</p>
+                  </div>
                 </CardContent>
               </Card>
-            ))}
+
+              {/* Chart 2: Industry Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Industry Distribution</CardTitle>
+                  <CardDescription>Tech vs Non-Tech workers in the survey</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart
+                      data={[
+                        {
+                          category: 'Tech Companies',
+                          count: Math.round(dataset_info.total_samples * dataset_info.tech_companies_pct),
+                          percentage: (dataset_info.tech_companies_pct * 100).toFixed(1),
+                        },
+                        {
+                          category: 'Non-Tech Companies',
+                          count: Math.round(dataset_info.total_samples * (1 - dataset_info.tech_companies_pct)),
+                          percentage: ((1 - dataset_info.tech_companies_pct) * 100).toFixed(1),
+                        },
+                      ]}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="category" />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value, name) => {
+                          if (name === 'count') return [`${value} people`, 'Count'];
+                          return value;
+                        }}
+                      />
+                      <Legend />
+                      <Bar dataKey="count" fill="#8b5cf6" name="Number of People" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="mt-4 text-center text-sm text-muted-foreground">
+                    <p><strong>{(dataset_info.tech_companies_pct * 100).toFixed(1)}%</strong> from tech industry</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Chart 3: Treatment Rate by Key Demographics */}
+              <Card className="md:col-span-2">
+                <CardHeader>
+                  <CardTitle>Mental Health Awareness Metrics</CardTitle>
+                  <CardDescription>Key statistics from the dataset</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart
+                      data={[
+                        {
+                          metric: 'Treatment Seekers',
+                          percentage: (dataset_info.treatment_rate * 100).toFixed(1),
+                          value: dataset_info.treatment_rate * 100,
+                        },
+                        {
+                          metric: 'Tech Industry',
+                          percentage: (dataset_info.tech_companies_pct * 100).toFixed(1),
+                          value: dataset_info.tech_companies_pct * 100,
+                        },
+                        {
+                          metric: 'Global Diversity',
+                          percentage: ((dataset_info.countries / 195) * 100).toFixed(1),
+                          value: (dataset_info.countries / 195) * 100,
+                        },
+                      ]}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="metric" />
+                      <YAxis label={{ value: 'Percentage (%)', angle: -90, position: 'insideLeft' }} />
+                      <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+                      <Bar dataKey="value" fill="#3b82f6">
+                        <Cell fill="#22c55e" />
+                        <Cell fill="#8b5cf6" />
+                        <Cell fill="#f59e0b" />
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
+                    <div className="text-center">
+                      <div className="font-bold text-green-600">{(dataset_info.treatment_rate * 100).toFixed(1)}%</div>
+                      <div className="text-muted-foreground">Seek Treatment</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-purple-600">{(dataset_info.tech_companies_pct * 100).toFixed(1)}%</div>
+                      <div className="text-muted-foreground">Tech Workers</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold text-orange-600">{dataset_info.countries} Countries</div>
+                      <div className="text-muted-foreground">Represented</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       )}
